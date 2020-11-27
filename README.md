@@ -9,4 +9,4 @@
 	1. Unzip the package or you can also clone its repository in Github
 	2. Upload the LavaLust folders and files to your server.
 	3. Open the application/config/config.php file with a text editor and set your base URL.
-	4. If you intend to use a database, open the application/config/database.php file with a text editor and set your database settings.
+	4. If you intend to use a database, open the application/config/database.php file with a text editor and set your database settings..

@@ -134,7 +134,8 @@ class Sample_model extends Model {
     }
 }
 ```
-	This code looks similar to the controller code that was used earlier. It creates a new model by extending Model and loads
+	This code looks similar to the controller code that was used earlier. It creates a new model by extending
+	Model and loads
 	the database library. This will make the database class available through the $this->db object.
 
 	Also using Query builder of LavaLust, you can create queries easier as what the example method loadusers is done.
@@ -154,11 +155,14 @@ class Users extends Controller {
 	This will show all the output coming from loadusers method. You can also load view to display the output.
 
 ### Load Library and Helpers
-	LavaLust has different library classes and helper functions to build your application easily. You can load the just what we did in view and model.
+	LavaLust has different library classes and helper functions to build your application easily. You can load the just what we 
+	did in view and model.
 
 	$this->load->library()
 		see library class
 	$this->load->helper()
 		see helper functions
+
+	To see all tutorials, You can check them in my [Youtube Channel](https://www.youtube.com/ronmarasigan) 
 
 

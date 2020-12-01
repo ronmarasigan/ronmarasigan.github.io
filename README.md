@@ -14,8 +14,8 @@
 	database settings..
 
 	To add more flavor in your security, you can change the $system_path and $application_folder name to something new. You can do
-	this by changing their values inside index.php. You can all place them outside public_html directory provided that you will use
-	the full path, e.g. ‘/www/MyUser/system’.
+	this by changing their values inside index.php. You can all place them outside public_html directory provided that you will
+	use the full path, e.g. ‘/www/MyUser/system’.
 
 	Hooray! Enjoy your new LavaLust Installation
 
@@ -37,5 +37,30 @@
 
 ## Tutorial
 	This section will only introduce you to basic principles of MVC using Lavalust.
+
+	Let say we have this link
+
+	http://site.com/users/profile/1
+
+	We might imagine that there is a controller named “users”. The method being called on news would be “users”. The news method’s
+	job could be to grab profile number 1, and render them on the page. Very often in MVC, you’ll see URL patterns that match:
+
+	http://site.com/[controller-class]/[controller-method]/[arguments]
+
+	As URL schemes become more complex, this may change. But for now, this is all we will need to know.
+
+	Create a file at application/controllers/Users.php with the following code.
+
+	```php
+	<?php
+	class Users extends Controller {
+
+	        public function profile($arg = 1)
+	        {
+	        }
+	}
+	```
+
+	You have created a class named Users, with a profile method that accepts one argument named $arg. The Pages class is extending the Controller class. This means that the new pages class can access the methods and variables defined in the Controller class (system/core/Controller.php).
 
 

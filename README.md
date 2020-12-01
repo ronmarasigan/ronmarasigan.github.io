@@ -177,7 +177,7 @@ class Users extends Controller {
 ### License
 	MIT License
 
-	Copyright (c) 2020 Ron Marasigan
+	Copyright (c) 2020 Ronald M. Marasigan
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal

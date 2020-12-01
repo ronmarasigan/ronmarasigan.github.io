@@ -51,16 +51,36 @@
 
 	Create a file at application/controllers/Users.php with the following code.
 
-	```php
-	<?php
-	class Users extends Controller {
+```php
+class Users extends Controller {
 
-	        public function profile($arg = 1)
-	        {
-	        }
-	}
-	```
+        public function profile($arg = 1)
+        {
+        }
+}
+```
 
-	You have created a class named Users, with a profile method that accepts one argument named $arg. The Pages class is extending the Controller class. This means that the new pages class can access the methods and variables defined in the Controller class (system/core/Controller.php).
+	You have created a class named Users, with a profile method that accepts one argument named $arg. The Pages class is extending
+	the Controller class. This means that the new pages class can access the methods and variables defined in the Controller
+	class (system/core/Controller.php).
+
+	The controller is what will become the center of every request to your web application. In very technical LavaLust
+	discussions, it may be referred to as the super object. Like any php class, you refer to it within your controllers
+	as $this. Referring to $this is how you will load libraries, views, and generally command the framework.
+
+	Now you’ve created your first method, it’s time to make some basic page templates inside the folder "application/views/". You just name it "profile.php";
+
+	Here's the code:
+
+```html
+<html>
+<head>
+	<title>Profile</title>
+</head>
+<body>
+	This is the content!
+</body>
+</html>
+```
 
 

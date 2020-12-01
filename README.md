@@ -52,15 +52,16 @@
 	Create a file at application/controllers/Users.php with the following code.
 
 ```php
+<?php
 class Users extends Controller {
 
-        public function profile($arg = 1)
+        public function profile($profile = 'RON')
         {
         }
 }
 ```
 
-	You have created a class named Users, with a profile method that accepts one argument named $arg. The Pages class is extending
+	You have created a class named Users, with a profile method that accepts one argument named $profile. The Pages class is extending
 	the Controller class. This means that the new pages class can access the methods and variables defined in the Controller
 	class (system/core/Controller.php).
 
@@ -68,7 +69,8 @@ class Users extends Controller {
 	discussions, it may be referred to as the super object. Like any php class, you refer to it within your controllers
 	as $this. Referring to $this is how you will load libraries, views, and generally command the framework.
 
-	Now you’ve created your first method, it’s time to make some basic page templates inside the folder "application/views/". You just name it "profile.php";
+	Now you’ve created your first method, it’s time to make some basic page templates inside the folder application/views/.
+	You just name it "profile.php";
 
 	Here's the code:
 
@@ -82,5 +84,81 @@ class Users extends Controller {
 </body>
 </html>
 ```
+
+#### Adding logic to the controller
+	Earlier you set up a controller with a view() method. The method accepts one parameter, which is the Profile name to be
+	printed. The static page templates will be located in the application/views/ directory.
+
+```php
+public function profile($profile = 'RON')
+{
+	$data['profile'] = $profile;
+	$this->load->view('profile', $data); 
+}
+```
+
+	The profile name is defined in this method, but instead of assigning the value to a variable, it is assigned to the profile
+	element in the $data array.
+
+	The last thing that has to be done is loading the views in the order they should be displayed. The second parameter in the
+	view() method is used to pass values to the view. Each value in the $data array is assigned to a variable with the name of
+	its key. So the value of $data['profile'] in the controller is equivalent to $profile in the view.
+
+### Load Model
+	Instead of writing database operations right in the controller, queries should be placed in a model, so they can easily be
+	reused later. Models are the place where you retrieve, insert, and update information in your database or other data stores.
+	They represent your data.
+
+	Open up the application/models/ directory and create a new file called News_model.php and add the following code.
+
+	CREATE TABLE users (
+        id int(11) NOT NULL AUTO_INCREMENT,
+        username varchar(20) NOT NULL,
+        email varchar(60) NOT NULL,
+        PRIMARY KEY (id)
+	);
+
+```php
+<?php
+class Sample_model extends Model {
+
+	$private $db;
+
+    public function __construct()
+    {
+		$this->$db = $this->load->database();
+    }
+
+    public function loadusers() {
+    	return $this->db->table('users')->fetchAll();
+    }
+}
+```
+	This code looks similar to the controller code that was used earlier. It creates a new model by extending Model and loads
+	the database library. This will make the database class available through the $this->db object.
+
+	Also using Query builder of LavaLust, you can create queries easier as what the example method loadusers is done.
+
+	To display the all the output from __loadusers__ method you can user the Users class we have created earlier.
+
+```php
+class Users extends Controller {
+	public function viewusers() {
+		$users = $this->load->model('loadusers');
+
+		var_dump($users);
+	}
+}
+```
+
+	This will show all the output coming from loadusers method. You can also load view to display the output.
+
+### Load Library and Helpers
+	LavaLust has different library classes and helper functions to build your application easily. You can load the just what we did in view and model.
+
+	$this->load->library()
+		see library class
+	$this->load->helper()
+		see helper functions
 
 

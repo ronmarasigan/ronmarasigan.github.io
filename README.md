@@ -172,8 +172,9 @@ class Users extends Controller {
 		see helper functions
 
 	To see all tutorials, You can check them in my Youtube Channel
-[TechRON](https://www.youtube.com/ronmarasigan)
+[Youtube Channel] https://youtube.com/ronmarasigan
 
 ### License
+Under MIT
 
 

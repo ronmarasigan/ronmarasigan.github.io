@@ -1,5 +1,11 @@
 # LavaLust Framework Documentation
 
+	LavaLust is an lightweight Web Framework - (using MVC pattern) - for people who are developing web sites using PHP. It helps
+	you write code easily using Object-Oriented Approach. It also provides set of libraries for commonly needed tasks, as well as
+	a helper functions to minimize the amount of time coding.
+
+	LavaLust is only in its early release. You may encounter errors/bugs so please inform us creating issues and pull request in the github repository.
+
 ## Server Requirements
 	* At least use PHP 7.2
 	* MySQL 5 or higher
@@ -10,6 +16,8 @@
 	1. Unzip the package or you can also clone its repository in Github
 	2. Upload the LavaLust folders and files to your server.
 	3. Open the application/config/config.php file with a text editor and set your base URL.
+		$base_url = 'http://localhost/your_folder/' or
+		$base_url = 'http://yourwebsite.com/
 	4. If you intend to use a database, open the application/config/database.php file with a text editor and set your
 	database settings..
 
@@ -163,6 +171,9 @@ class Users extends Controller {
 	$this->load->helper()
 		see helper functions
 
-	To see all tutorials, You can check them in my [Youtube Channel](https://www.youtube.com/ronmarasigan) 
+	To see all tutorials, You can check them in my Youtube Channel
+[TechRON](https://www.youtube.com/ronmarasigan)
+
+### License
 
 

@@ -4,7 +4,8 @@
 	you write code easily using Object-Oriented Approach. It also provides set of libraries for commonly needed tasks, as well as
 	a helper functions to minimize the amount of time coding.
 
-	LavaLust is only in its early release. You may encounter errors/bugs so please inform us creating issues and pull request in the github repository.
+	LavaLust is only in its early release. You may encounter errors/bugs so please inform us creating issues and pull request
+	in the github repository.
 
 ## Server Requirements
 	* At least use PHP 7.2
@@ -50,8 +51,9 @@
 
 	http://site.com/users/profile/1
 
-	We might imagine that there is a controller named “users”. The method being called on news would be “users”. The news method’s
-	job could be to grab profile number 1, and render them on the page. Very often in MVC, you’ll see URL patterns that match:
+	We might imagine that there is a controller named “users”. The method being called on users would be “profile”. The profile
+	method’s job could be to grab user's profile number 1, and render them on the page. Very often in MVC, you’ll see URL patterns
+	that match:
 
 	http://site.com/[controller-class]/[controller-method]/[arguments]
 
@@ -69,9 +71,9 @@ class Users extends Controller {
 }
 ```
 
-	You have created a class named Users, with a profile method that accepts one argument named $profile. The Pages class is extending
-	the Controller class. This means that the new pages class can access the methods and variables defined in the Controller
-	class (system/core/Controller.php).
+	You have created a class named Users, with a profile method that accepts one argument named $profile. The Pages class is
+	extending the Controller class. This means that the new pages class can access the methods and variables defined in the
+	Controller class (system/core/Controller.php).
 
 	The controller is what will become the center of every request to your web application. In very technical LavaLust
 	discussions, it may be referred to as the super object. Like any php class, you refer to it within your controllers
@@ -117,7 +119,7 @@ public function profile($profile = 'RON')
 	reused later. Models are the place where you retrieve, insert, and update information in your database or other data stores.
 	They represent your data.
 
-	Open up the application/models/ directory and create a new file called News_model.php and add the following code.
+	Open up the application/models/ directory and create a new file called Sample_model.php and add the following code.
 
 	CREATE TABLE users (
         id int(11) NOT NULL AUTO_INCREMENT,

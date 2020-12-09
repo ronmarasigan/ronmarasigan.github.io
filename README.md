@@ -177,7 +177,7 @@ class Users extends Controller {
 
 	This will show all the output coming from loadusers method. You can also load view to display the output.
 
-### Load Library and Helpers
+### Load Libraries and Helpers
 	LavaLust has different library classes and helper functions to build your application easily. You can load the just what we 
 	did in view and model.
 

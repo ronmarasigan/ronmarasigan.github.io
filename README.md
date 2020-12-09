@@ -17,14 +17,14 @@
 	1. Unzip the package or you can also clone its repository in Github
 	2. Upload the LavaLust folders and files to your server.
 	3. Open the application/config/config.php file with a text editor and set your base URL.
-		$base_url = 'http://localhost/your_folder/' or
+		$base_url = 'http://localhost/path_to_your_folder/' or
 		$base_url = 'http://yourwebsite.com/
 	4. If you intend to use a database, open the application/config/database.php file with a text editor and set your
 	database settings..
 
-	To add more flavor in your security, you can change the $system_path and $application_folder name to something new. You can do
-	this by changing their values inside index.php. You can all place them outside public_html directory provided that you will
-	use the full path, e.g. ‘/www/MyUser/system’.
+	To add more flavor in your security, you can change the $system_path and $application_folder name to something new. You can
+	do this by changing their values inside index.php. You can all place them outside public_html directory provided that you
+	will use the full path, e.g. ‘/www/MyUser/system’.
 
 	Hooray! Enjoy your new LavaLust Installation
 
@@ -107,6 +107,20 @@ public function profile($profile = 'RON')
 }
 ```
 
+	Inside this view file we can access $data variable through this example.
+```php
+<html>
+<head>
+	<title>Profile</title>
+</head>
+<body>
+	This is the content!
+	<?php echo $data['profile']; ?>
+</body>
+</html>
+```
+	To view
+	
 	The profile name is defined in this method, but instead of assigning the value to a variable, it is assigned to the profile
 	element in the $data array.
 

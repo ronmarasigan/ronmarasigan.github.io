@@ -119,7 +119,6 @@ public function profile($profile = 'RON')
 </body>
 </html>
 ```
-	To view
 	
 	The profile name is defined in this method, but instead of assigning the value to a variable, it is assigned to the profile
 	element in the $data array.

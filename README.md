@@ -65,7 +65,7 @@
 <?php
 class Users extends Controller {
 
-        public function profile($profile = 'RON')
+        public function profile($profile)
         {
         }
 }
@@ -93,6 +93,18 @@ class Users extends Controller {
 	This is the content!
 </body>
 </html>
+```
+
+	Final Code will be:
+```php
+<?php
+class Users extends Controller {
+
+        public function profile($profile)
+        {
+        	$this->load->view('profile');
+        }
+}
 ```
 
 #### Adding logic to the controller
@@ -174,9 +186,12 @@ class Users extends Controller {
 	}
 }
 ```
-
 	This will show all the output coming from loadusers method. You can also load view to display the output.
 
+## Database (Query Builder)
+
+### List of Functions
+	
 ### Load Libraries and Helpers
 	LavaLust has different library classes and helper functions to build your application easily. You can load the just what we 
 	did in view and model.

@@ -96,6 +96,7 @@ class Users extends Controller {
 ```
 
 	Final Code will be:
+	
 ```php
 <?php
 class Users extends Controller {
@@ -120,7 +121,7 @@ public function profile($profile = 'RON')
 ```
 
 	Inside this view file we can access $data variable through this example.
-	
+
 ```php
 <html>
 <head>

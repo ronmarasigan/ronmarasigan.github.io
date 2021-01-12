@@ -454,7 +454,7 @@ $this->db->table('books')->like('bio', '%php%')->or_like('bio', '%java%')->get_a
 # Output: "SELECT * FROM books WHERE bio LIKE '%php%' OR bio LIKE '%java%'"
 ```
 
-### groupBy
+### group_by
 ```php
 # Usage 1: One parameter
 $this->db->table('books')->where('status', 1)->group_by('cat_id')->get_all();
@@ -483,7 +483,7 @@ $this->db->table('employee')->where('active', 1)->group_by('department_id')->hav
 # Output: "SELECT * FROM employee WHERE active='1' GROUP BY department_id HAVING AVG(salary) > '250' AND MAX(salary) < '1000'"
 ```
 
-### orderBy
+### order_by
 ```php
 # Usage 1: One parameter
 $this->db->table('test')->where('status', 1)->order_by('id', 'ASC')->get_all();

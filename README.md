@@ -167,7 +167,7 @@ class Sample_model extends Model {
     }
 
     public function loadusers() {
-    	return $this->db->table('users')->fetchAll();
+    	return $this->db->table('users')->get_all();
     }
 }
 ```

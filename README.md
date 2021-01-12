@@ -208,6 +208,45 @@ $bind = array(
 $this->db->table('user')->insert($bind)->exec();
 ```
 
+### update
+```php
+$data = [
+	'username' => 'ronmarasigan',
+	'password' => 'pass',
+	'activation' => 1,
+	'status' => 1
+];
+
+$this->db->table('users')->where('id', 10)->update($data)->exec();
+# Output: "UPDATE users SET username='ronmarasigan', password='pass', activation='1', status='1' WHERE id='10'"
+```
+
+### transaction
+```php
+$this->db->transaction();
+
+$data = [
+	'title' => 'new title',
+	'status' => 2
+];
+$this->db->table('table')->where('id', 10)->update($data)->exec();
+
+$this->db->commit();
+# OR
+$this->db->rollBack();
+```
+
+### delete
+```php
+$this->db->table('table')->where("id", 17)->delete()->exec();
+# Output: "DELETE FROM table WHERE id = '17'"
+
+# OR
+
+$this->db->table('table')->delete()->exec();
+# Output: "TRUNCATE TABLE delete"
+```
+
 ### Select
 ```php
 # Usage 1: string parameter

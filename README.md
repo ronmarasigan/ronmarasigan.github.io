@@ -93,7 +93,7 @@ class Users extends Controller {
 	<title>Profile</title>
 </head>
 <body>
-	This is the content!
+	This is the content! 
 </body>
 </html>
 ```

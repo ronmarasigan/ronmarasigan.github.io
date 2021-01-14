@@ -15,7 +15,7 @@
 
 ## LavaLust is installed in four steps:
 	1. Unzip the package or you can also clone its repository in Github
-	Link: [https://github.com/ronmarasigan/LavaLust] (https://github.com/ronmarasigan/LavaLust)
+	Link: [https://github.com/ronmarasigan/LavaLust](https://github.com/ronmarasigan/LavaLust)
 	2. Upload the LavaLust folders and files to your server.
 	3. Open the application/config/config.php file with a text editor and set your base URL.
 		$base_url = 'http://localhost/path_to_your_folder/' or

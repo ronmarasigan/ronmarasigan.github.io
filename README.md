@@ -14,7 +14,7 @@
 	* mod_rewrite is enabled
 
 ## LavaLust is installed in four steps:
-	1. Unzip the package or you can also clone its repository in Github
+	1. Unzip the package or you can also clone its repository in Github / https://github.com/ronmarasigan/LavaLust
 	2. Upload the LavaLust folders and files to your server.
 	3. Open the application/config/config.php file with a text editor and set your base URL.
 		$base_url = 'http://localhost/path_to_your_folder/' or
@@ -260,11 +260,11 @@ $this->db->select('column1 AS c1, column2 AS c2')->table('table')->get_all();
 ### select functions (min, max, sum, avg, count)
 ```php
 # Usage 1:
-$this->db->table('table')->max('price')->get();
+$this->db->table('table')->select_max('price')->get();
 # Output: "SELECT MAX(price) FROM table"
 
 # Usage 2:
-$this->db->table('table')->count('id', 'total_row')->get();
+$this->db->table('table')->select_count('id', 'total_row')->get();
 # Output: "SELECT COUNT(id) AS total_row FROM table"
 ```
 

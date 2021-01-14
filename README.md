@@ -16,7 +16,7 @@
 ## LavaLust is installed in four steps:
 	1. Unzip the package or you can also clone its repository in Github
 
-[https://github.com/ronmarasigan/LavaLust](https://github.com/ronmarasigan/LavaLust)
+Link: [LavaLust Framework](https://github.com/ronmarasigan/LavaLust)
 
 	2. Upload the LavaLust folders and files to your server.
 	3. Open the application/config/config.php file with a text editor and set your base URL.
@@ -514,7 +514,7 @@ $this->db->table('test')->limit(10)->offset(10)->get_all();
 		see helper functions
 
 	To see all tutorials, You can check them in my Youtube Channel
-	
+
 [Youtube Channel](https://youtube.com/ronmarasigan)
 
 ### License

@@ -164,14 +164,8 @@ public function profile($profile = 'RON')
 <?php
 class Sample_model extends Model {
 
-	$private $db;
-
-    public function __construct()
-    {
-		$this->$db = $this->load->database();
-    }
-
     public function loadusers() {
+    	$this->load->database();
     	return $this->db->table('users')->get_all();
     }
 }

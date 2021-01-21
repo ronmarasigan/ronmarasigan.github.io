@@ -199,6 +199,15 @@ class Users extends Controller {
 
 ## List of Methods
 
+### Raw Query
+```php
+$bind = array(
+	'username' => $username,
+	);
+$this->db->raw('select * from users where username = ?', $bind);
+# Output: "INSERT INTO users username VALUES ($username)"
+```
+
 ### Insert
 ```php
 $bind = array(
@@ -209,6 +218,7 @@ $bind = array(
 	);
 
 $this->db->table('user')->insert($bind)->exec();
+# Output: "INSERT INTO user username, password, email, usertype VALUES ($username, $password, $email, $usertype)"
 ```
 
 ### update
@@ -253,14 +263,23 @@ $this->db->rollBack();
 ### Select
 ```php
 # Usage 1: string parameter
-$this->db->select('column1, column2')->table('table')->get_all();
+$this->db->table('table')->select('column1, column2')->get_all();
 # Output: "SELECT column1, column2 FROM table"
 
-$this->db->select('column1 AS c1, column2 AS c2')->table('table')->get_all();
+$this->db->table('table')->select('column1 AS c1, column2 AS c2')->get_all();
 # Output: "SELECT column1 AS c1, column2 AS c2 FROM table"
 ```
 
 ### select functions (min, max, sum, avg, count)
+You can use this method in 5 ways. These;
+
+- select_min
+- select_max
+- select_sum
+- select_avg
+- select_count
+
+Examples:
 ```php
 # Usage 1:
 $this->db->table('table')->select_max('price')->get();
@@ -293,10 +312,10 @@ $this->db->table('table1 AS t1, table2 AS t2');
 $this->db->table('table')->get_all(); 
 # Output: "SELECT * FROM table"
 
-$this->db->select('username')->table('users')->where('status', 1)->get_all();
+$this->db->table('users')->select('username')->where('status', 1)->get_all();
 # Output: "SELECT username FROM users WHERE status='1'"
 
-$this->db->select('title')->table('pages')->where('id', 17)->get(); 
+$this->db->table('pages')->select('title')->where('id', 17)->get(); 
 # Output: "SELECT title FROM pages WHERE id='17' LIMIT 1"
 ```
 
@@ -306,6 +325,7 @@ $this->db->table('test as t')->join('foo as f', 't.id', 'f.t_id')->where('t.stat
 # Output: "SELECT * FROM test as t JOIN foo as f ON t.id=f.t_id WHERE t.status='1'"
 ```
 You can use this method in 7 ways. These;
+
 - join
 - left_join
 - right_join

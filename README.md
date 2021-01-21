@@ -201,10 +201,7 @@ class Users extends Controller {
 
 ### Raw Query
 ```php
-$bind = array(
-	'username' => $username,
-	);
-$this->db->raw('select * from users where username = ?', $bind);
+$this->db->raw('select * from users where username = ?', array($username));
 # Output: "INSERT INTO users username VALUES ($username)"
 ```
 

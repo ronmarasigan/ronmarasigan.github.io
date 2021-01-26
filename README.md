@@ -515,14 +515,48 @@ $this->db->table('test')->limit(10)->offset(10)->get_all();
 # Outp
 ```
 
-### Load Libraries and Helpers
+## Load Libraries and Helpers
+
 	LavaLust has different library classes and helper functions to build your application easily. You can load the just what we 
 	did in view and model.
+
 
 	$this->load->library()
 		see library class
 	$this->load->helper()
 		see helper functions
+### Cache Library
+
+```php
+#Uncached model call
+$this->news->get_news($category, 'business');
+
+#cached model call / cache for 2 minutes
+$this->cache->model('news', 'get_news', array($category, 'business'), 120);
+
+#cached library call / empty or 0 for the last parameter for unlimited time
+$this->cache->library('some_library', 'calcualte_something', array($foo, $bar, $bla)); 
+
+#cached array or object
+$this->cache->write($data, 'cached_name');
+$data = $this->cache->get('cached_name');
+
+#Delete cache
+$this->cache->delete('cached_name');
+
+#Delete all cache
+$this->cache->delete_all();
+
+#Delete cache group
+$this->cache->write($data, 'nav_header');
+$this->cache->write($data, 'nav_footer');
+$this->cache->delete_group('nav_');
+
+#Delete cache item
+#Call like a normal library or model but give a negative $expire
+$this->cache->model('news', 'get_news', array($category, 'business'), -1);
+```
+
 
 	To see all tutorials, You can check them in my Youtube Channel
 

@@ -525,6 +525,7 @@ $this->db->table('test')->limit(10)->offset(10)->get_all();
 		see library class
 	$this->load->helper()
 		see helper functions
+
 ### Cache Library
 
 ```php

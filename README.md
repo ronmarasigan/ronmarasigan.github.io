@@ -526,6 +526,41 @@ $this->db->table('test')->limit(10)->offset(10)->get_all();
 	$this->load->helper()
 		see helper functions
 
+### Session Library
+
+```php
+#Set / Initialize session
+$sess = array(
+	$username = 'acidcore',
+	$usertype = 'ADMIN'
+);
+$this->session->set_userdata($sess);
+
+#Access session variable
+$this->session->userdata('session_variable')
+#session_variable is the initialized variable from set_userdata()
+
+#Set Flash data
+$sess = array(
+	$err_message = 'Something went wrong'
+);
+$this->session->set_flashdata($sess);
+
+#Access Flash data
+$this->session->flashdata('session_variable')
+#session_variable is the initialized variable from set_flashdata()
+
+#Unset session variable
+$sess = array(
+	$username = 'acidcore',
+	$usertype = 'ADMIN'
+);
+$this->session->unset_userdata($sess);
+
+#Destroy session
+$this->session->sess_destroy();
+```
+
 ### Cache Library
 
 ```php
@@ -538,7 +573,7 @@ $this->cache->model('news', 'get_news', array($category, 'business'), 120);
 #cached library call / empty or 0 for the last parameter for unlimited time
 $this->cache->library('some_library', 'calcualte_something', array($foo, $bar, $bla)); 
 
-#cached array or object
+#Cached array or object
 $this->cache->write($data, 'cached_name');
 $data = $this->cache->get('cached_name');
 
@@ -558,8 +593,271 @@ $this->cache->delete_group('nav_');
 $this->cache->model('news', 'get_news', array($category, 'business'), -1);
 ```
 
+### Email Library
 
-	To see all tutorials, You can check them in my Youtube Channel
+```php
+#Email Subject
+$this->email->subject('Email Subject')
+
+#Sender
+$this->email->sender($sender_email);
+#where $sender_email is the email of the sender
+
+#Email content / Plain or HTML / Default: Plain
+$this->email->email_content($content, 'html');
+#where $content is the email content
+
+#Attachment
+$this->email->attachment('attachment link or path');
+
+#Recipient
+$this->email->recipient($recipient_email);
+#where $recipient_email is the email of the recipient
+
+#Reply to
+$this->email->recipient($replyto_email);
+#If your want to specify other email to receive the reply
+
+#Send
+$this->email->send();
+```
+
+### Form Validation Class
+
+```php
+#Check if form was submitted with content
+$this->form_validation->submitted();
+
+#Name
+$this->form_validation->name('name of variable from REQUEST');
+
+#Pattern
+$this->form_validation->pattern('pattern');
+#see Form_validation class for the list of pattern / eg. url, tel, etc
+
+#Custom pattern
+$this->form_validation->custom_pattern('custom pattern');
+
+#Required / Check if field is required
+$this->form_validation->required();
+
+#Matches / Check if current field match the other field
+$this->form_validation->matches($field)
+
+#Minimum length
+$this->form_validation->min_length($min)
+
+#Maximum length
+$this->form_validation->max_length($max)
+
+#Valid Email
+$this->form_validation->valid_email($email)
+
+#Alpha
+$this->form_validation->alpha($field)
+
+#Alpha Numeric
+$this->form_validation->alpha_numeric($field)
+
+#Alpha numeric and space
+$this->form_validation->alpha_numeric_space($field)
+
+#Alpha and Space
+$this->form_validation->alpha_space($field)
+
+#Alpha numeric and dash
+$this->form_validation->alpha_numeric_dash($field)
+
+#Numeric
+$this->form_validation->numeric($field)
+
+#Integer
+$this->form_validation->integer($field)
+
+#Decimal
+$this->form_validation->decimal($field)
+
+#Greater than
+$this->form_validation->greater_than($field)
+
+#Greater than Equal to
+$this->form_validation->greater_than_equal_to($field)
+
+#Less than
+$this->form_validation->less_than($field)
+
+#Less than Equal to
+$this->form_validation->less_than_equal_to($field)
+
+#In list
+$this->form_validation->in_list($field)
+
+#Run
+$this->form_validation->run()
+#validate and run if no errors
+```
+
+### URL Helper
+
+```php
+#Redirect
+redirect($uri, $method, $sec)
+#it has 3 parameters which one of them is required(uri)
+#method: Refresh of Location.
+#sec: if refresh, secs to redirect
+
+#Loading of javascript files
+load_js(array('js1', 'js2'))
+#js1/js2 is the filename or path of javascript
+
+#Loading of css files
+load_css(array('css1', 'css2'))
+#css1/css2 is the filename or path of css
+
+#Create links
+site_url('controller/method/args/args')
+```
+
+### Form Helper
+```php
+#Open HTML form
+echo form_open('email/send');
+#Would produce: <form method="post" accept-charset="utf-8" action="http://example.com/index.php/email/send">
+#Adding attributes
+$attributes = array('class' => 'email', 'id' => 'myform');
+echo form_open('email/send', $attributes);
+#or
+echo form_open('email/send', 'class="email" id="myform"');
+#Hidden fields can be added by passing an associative array to the third parameter, like this:
+$hidden = array('username' => 'Joe', 'member_id' => '234');
+echo form_open('email/send', '', $hidden);
+#You can skip the second parameter by passing any falsy value to it.
+
+#Multipart / This function is absolutely identical to form_open() above, except that it adds a multipart attribute, which is necessary if you would like to use the form to upload files with.
+form_open_multipart()
+
+#Hidden input
+form_hidden('username', 'johndoe');
+#Would produce: <input type="hidden" name="username" value="johndoe" />
+
+$data = array(
+        'name'  => 'John Doe',
+        'email' => 'john@example.com',
+        'url'   => 'http://example.com'
+);
+echo form_hidden($data);
+#Would produce:
+#<input type="hidden" name="name" value="John Doe" />
+#<input type="hidden" name="email" value="john@example.com" />
+#<input type="hidden" name="url" value="http://example.com" />
+
+$data = array(
+        'name'  => 'John Doe',
+        'email' => 'john@example.com',
+        'url'   => 'http://example.com'
+);
+echo form_hidden('my_array', $data);
+#Would produce:
+#<input type="hidden" name="my_array[name]" value="John Doe" />
+#<input type="hidden" name="my_array[email]" value="john@example.com" />
+#<input type="hidden" name="my_array[url]" value="http://example.com" />
+
+$data = array(
+        'type'  => 'hidden',
+        'name'  => 'email',
+        'id'    => 'hiddenemail',
+        'value' => 'john@example.com',
+        'class' => 'hiddenemail'
+);
+echo form_input($data);
+#Would produce:
+#<input type="hidden" name="email" value="john@example.com" id="hiddenemail" class="hiddenemail" />
+
+echo form_input('username', 'johndoe');
+$data = array(
+        'name'          => 'username',
+        'id'            => 'username',
+        'value'         => 'johndoe',
+        'maxlength'     => '100',
+        'size'          => '50',
+        'style'         => 'width:50%'
+);
+
+echo form_input($data);
+#Would produce:
+#<input type="text" name="username" value="johndoe" id="username" maxlength="100" size="50" style="width:50%"  />
+
+$js = 'onClick="some_function()"';
+echo form_input('username', 'johndoe', $js);
+#or
+$js = array('onClick' => 'some_function();');
+echo form_input('username', 'johndoe', $js);
+
+form_password()
+#This function is identical in all respects to the form_input() function above except that it uses the “password” input type.
+
+form_upload()
+#This function is identical in all respects to the form_input() function above except that it uses the “file” input type, allowing it to be used to upload files.
+
+form_textarea()
+#This function is identical in all respects to the form_input() function above except that it generates a “textarea” type.
+
+form_dropdown()
+$options = array(
+        'small'         => 'Small Shirt',
+        'med'           => 'Medium Shirt',
+        'large'         => 'Large Shirt',
+        'xlarge'        => 'Extra Large Shirt',
+);
+
+$shirts_on_sale = array('small', 'large');
+echo form_dropdown('shirts', $options, 'large');
+#Would produce:
+#<select name="shirts">
+#<option value="small">Small Shirt</option>
+#<option value="med">Medium  Shirt</option>
+#<option value="large" selected="selected">Large Shirt</option>
+#<option value="xlarge">Extra Large Shirt</option>
+#</select>
+
+echo form_dropdown('shirts', $options, $shirts_on_sale);
+#Would produce:
+#<select name="shirts" multiple="multiple">
+#<option value="small" selected="selected">Small Shirt</option>
+#<option value="med">Medium  Shirt</option>
+#<option value="large" selected="selected">Large Shirt</option>
+#<option value="xlarge">Extra Large Shirt</option>
+#</select>
+
+$js = 'id="shirts" onChange="some_function();"';
+echo form_dropdown('shirts', $options, 'large', $js);
+#or
+$js = array(
+        'id'       => 'shirts',
+        'onChange' => 'some_function();'
+);
+echo form_dropdown('shirts', $options, 'large', $js);
+
+form_multiselect()
+#Lets you create a standard multiselect field. The first parameter will contain the name of the field, the second parameter will contain an associative array of options, and the third parameter will contain the value or values you wish to be selected.
+
+#The parameter usage is identical to using form_dropdown() above, except of course that the name of the field will need to use POST array syntax, e.g. foo[].
+
+form_fieldset()
+echo form_fieldset('Address Information');
+echo "<p>fieldset content here</p>\n";
+echo form_fieldset_close();
+#Produces:
+#<fieldset>
+#<legend>Address Information</legend>
+#<p>fieldset content here</p>
+#</fieldset>
+
+form_fieldset_close()
+$string = '</div></div>';
+echo form_fieldset_close($string);
+// Would produce: </fieldset></div></div>
+```
 
 [Youtube Channel](https://youtube.com/ronmarasigan)
 

@@ -221,13 +221,13 @@ $data = [
 	'status' => 1
 ];
 
-$this->db->table('users')->where('id', 10)->update($data)->exec();
+$this->db->table('users')->update($data)->where('id', 10)->exec();
 # Output: "UPDATE users SET username='ronmarasigan', password='pass', activation='1', status='1' WHERE id='10'"
 ```
 
 ### delete
 ```php
-$this->db->table('table')->where("id", 17)->delete()->exec();
+$this->db->table('table')->delete()->where("id", 17)->exec();
 # Output: "DELETE FROM table WHERE id = '17'"
 
 # OR
@@ -244,7 +244,7 @@ $data = [
 	'title' => 'new title',
 	'status' => 2
 ];
-$this->db->table('table')->where('id', 10)->update($data)->exec();
+$this->db->table('table')->update($data)->where('id', 10)->exec();
 
 $this->db->commit();
 # OR

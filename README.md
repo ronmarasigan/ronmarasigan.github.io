@@ -312,7 +312,7 @@ $this->db->table('pages')->select('title')->where('id', 17)->get();
 
 ### join
 ```php
-$this->db->table('test as t')->join('foo as f', 't.id', 'f.t_id')->where('t.status', 1)->get_all();
+$this->db->table('test as t')->join('foo as f', 't.id=f.t_id')->where('t.status', 1)->get_all();
 # Output: "SELECT * FROM test as t JOIN foo as f ON t.id=f.t_id WHERE t.status='1'"
 ```
 You can use this method in 7 ways. These;

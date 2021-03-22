@@ -7,6 +7,9 @@
 	LavaLust is only in its early release. You may encounter errors/bugs so please inform us creating issues and pull request
 	in the github repository.
 
+	Note: If you are using LavaLust Version < 2 then you will use $this->load instead of $this->call. Default folder structure
+	for version > 1 is app, scheme and public but the function is same with the older version.
+
 ## Server Requirements
 	* At least use PHP 7.2
 	* MySQL 5 or higher
@@ -106,7 +109,7 @@ class Users extends Controller {
 
         public function profile($profile)
         {
-        	$this->load->view('profile');
+        	$this->call->view('profile');
         }
 }
 ```
@@ -119,7 +122,7 @@ class Users extends Controller {
 public function profile($profile = 'RON')
 {
 	$data['profile'] = $profile;
-	$this->load->view('profile', $data); 
+	$this->call->view('profile', $data); 
 }
 ```
 
@@ -165,7 +168,7 @@ public function profile($profile = 'RON')
 class Sample_model extends Model {
 
     public function loadusers() {
-    	$this->load->database();
+    	$this->call->database();
     	return $this->db->table('users')->get_all();
     }
 }
@@ -181,7 +184,7 @@ class Sample_model extends Model {
 ```php
 class Users extends Controller {
 	public function viewusers() {
-		$users = $this->load->model('loadusers');
+		$users = $this->call->model('loadusers');
 
 		var_dump($users);
 	}
@@ -521,9 +524,9 @@ $this->db->table('test')->limit(10)->offset(10)->get_all();
 	did in view and model.
 
 
-	$this->load->library()
+	$this->call->library()
 		see library class
-	$this->load->helper()
+	$this->call->helper()
 		see helper functions
 
 ### Session Library

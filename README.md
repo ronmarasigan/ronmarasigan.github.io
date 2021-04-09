@@ -211,7 +211,7 @@ $bind = array(
 	'usertype' => $usertype,
 	);
 
-$this->db->table('user')->insert($bind)->exec();
+$this->db->table('user')->insert($bind);
 # Output: "INSERT INTO user username, password, email, usertype VALUES ($username, $password, $email, $usertype)"
 ```
 
@@ -224,18 +224,18 @@ $data = [
 	'status' => 1
 ];
 
-$this->db->table('users')->update($data)->where('id', 10)->exec();
+$this->db->table('users')->update($data)->where('id', 10);
 # Output: "UPDATE users SET username='ronmarasigan', password='pass', activation='1', status='1' WHERE id='10'"
 ```
 
 ### delete
 ```php
-$this->db->table('table')->delete()->where("id", 17)->exec();
+$this->db->table('table')->delete()->where("id", 17);
 # Output: "DELETE FROM table WHERE id = '17'"
 
 # OR
 
-$this->db->table('table')->delete()->exec();
+$this->db->table('table')->delete();
 # Output: "TRUNCATE TABLE delete"
 ```
 
@@ -247,7 +247,7 @@ $data = [
 	'title' => 'new title',
 	'status' => 2
 ];
-$this->db->table('table')->update($data)->where('id', 10)->exec();
+$this->db->table('table')->update($data)->where('id', 10);
 
 $this->db->commit();
 # OR

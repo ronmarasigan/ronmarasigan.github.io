@@ -211,7 +211,7 @@ $bind = array(
 	'usertype' => $usertype,
 	);
 
-$this->db->table('user')->insert($bind);
+$this->db->table('user')->insert($bind)->exec();
 # Output: "INSERT INTO user username, password, email, usertype VALUES ($username, $password, $email, $usertype)"
 ```
 
@@ -224,18 +224,18 @@ $data = [
 	'status' => 1
 ];
 
-$this->db->table('users')->update($data)->where('id', 10);
+$this->db->table('users')->where('id', 10)->update($data)->exec();
 # Output: "UPDATE users SET username='ronmarasigan', password='pass', activation='1', status='1' WHERE id='10'"
 ```
 
 ### delete
 ```php
-$this->db->table('table')->delete()->where("id", 17);
+$this->db->table('table')->where("id", 17)->delete()->exec();
 # Output: "DELETE FROM table WHERE id = '17'"
 
 # OR
 
-$this->db->table('table')->delete();
+$this->db->table('table')->delete()->exec();
 # Output: "TRUNCATE TABLE delete"
 ```
 
@@ -247,7 +247,7 @@ $data = [
 	'title' => 'new title',
 	'status' => 2
 ];
-$this->db->table('table')->update($data)->where('id', 10);
+$this->db->table('table')->where('id', 10)->update($data)->exec();
 
 $this->db->commit();
 # OR
@@ -356,12 +356,12 @@ $this->db->table('users')->where('active', 1)->get_all();
 
 # OR
 
-$this->db->table('users')->where('age', '>=', 18)->getAll();
+$this->db->table('users')->where('age', '>=', 18)->get_all();
 # Output: "SELECT * FROM users WHERE age>='18'"
 
 # OR
 
-$this->db->table('users')->where('age = ? OR age = ?', [18, 20])->getAll();
+$this->db->table('users')->where('age = ? OR age = ?', [18, 20])->get_all();
 # Output: "SELECT * FROM users WHERE age='18' OR age='20'"
 ```
 
@@ -480,7 +480,7 @@ $this->db->table('books')->where('status', 1)->group_by('cat_id')->get_all();
 
 ```php
 # Usage 1: Array parameter
-$this->db->table('books')->where('status', 1)->groupBy(['cat_id', 'user_id'])->get_all();
+$this->db->table('books')->where('status', 1)->group_by(['cat_id', 'user_id'])->get_all();
 # Output: "SELECT * FROM books WHERE status = '1' GROUP BY cat_id, user_id"
 ```
 

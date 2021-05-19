@@ -700,6 +700,23 @@ $this->form_validation->run()
 #validate and run if no errors
 ```
 
+### Pagination Class
+
+```php
+#$total_rows is the total rows in the table
+#$rows_per_page is the number of records to show in every page
+#$page_num is the current page number
+#controller/method where the view page with paging was called eg. 'welcome/index'
+$this->pagination->initialized($total_rows, $rows_per_page, $page_num, $url)
+
+#method that renders the paging
+echo $this->pagination->paginate()
+#Note: You can check the default en-US file inside library to check other config that can be updated there
+#Configs:
+#CSS classes. You can change nav, ul, li a and a element classes of the pagination
+#Other configs can also changed by updating the language file
+```
+
 ### URL Helper
 
 ```php

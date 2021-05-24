@@ -707,7 +707,7 @@ $this->form_validation->run()
 #$rows_per_page is the number of records to show in every page
 #$page_num is the current page number
 #controller/method where the view page with paging was called eg. 'welcome/index'
-#
+#Example use
 $records_per_page = 10;
 
 $offset = ($page - 1) * $records_per_page;
@@ -722,8 +722,8 @@ $count = $this->db
             ->select_count('id', 'count')
             ->get_all()[0];
 
+#$this->pagination->initialize($total_rows, $rows_per_page, $page_num, $url)
 $this->pagination->initialize($count['count'], $records_per_page, $page, 'welcome/index');
-$this->pagination->initialized($total_rows, $rows_per_page, $page_num, $url)
 
 #method that renders the paging
 echo $this->pagination->paginate()

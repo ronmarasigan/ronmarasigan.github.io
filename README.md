@@ -12,7 +12,7 @@
 
 ## Server Requirements
 
-    * At least use PHP 7.1
+    * At least use PHP 7.2
     * MySQL 5 or higher
     * PDO is installed
     * enaled mod_rewrite(optional but recommended for security purposes)

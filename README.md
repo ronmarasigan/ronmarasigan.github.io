@@ -589,10 +589,7 @@ $this->session->flashdata('session_variable')
 #session_variable is the initialized variable from set_flashdata()
 
 #Unset session variable
-$sess = array(
-	$username = 'acidcore',
-	$usertype = 'ADMIN'
-);
+$sess = array('session_var1', 'session_var2');
 $this->session->unset_userdata($sess);
 
 #Destroy session
@@ -603,10 +600,10 @@ $this->session->sess_destroy();
 
 ```php
 #Uncached model call
-$this->news->get_news($category, 'business');
+$this->news_model->get_news($param1, $param2);
 
 #cached model call / cache for 2 minutes
-$this->cache->model('news', 'get_news', array($category, 'business'), 120);
+$this->cache->model('news_model', 'get_news', array($param1, $param2), 120);
 
 #cached library call / empty or 0 for the last parameter for unlimited time
 $this->cache->library('some_library', 'calcualte_something', array($foo, $bar, $bla));
@@ -653,7 +650,7 @@ $this->email->recipient($recipient_email);
 #where $recipient_email is the email of the recipient
 
 #Reply to
-$this->email->recipient($replyto_email);
+$this->email->reply_to($replyto_email);
 #If your want to specify other email to receive the reply
 
 #Send

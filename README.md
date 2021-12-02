@@ -320,7 +320,7 @@ $this->db->table('table1 AS t1, table2 AS t2');
 ```php
 # get(): return 1 record. It has one optional parameter, yo u can set the fetchmode. example: PDO::FETCH_OBJ by
 # default PDO::FETCH_ASSOC
-# getAll(): return multiple records.
+# get_all(): return multiple records.
 
 $this->db->table('table')->get_all();
 # Output: "SELECT * FROM table"

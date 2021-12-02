@@ -209,7 +209,7 @@ class Users extends Controller {
 
 ```php
 $this->db->raw('select * from users where username = ?', array($username));
-# Output: "INSERT INTO users username VALUES ($username)"
+# Output: "SELECT * FROM users WHERE username = ?"
 ```
 
 ### Insert

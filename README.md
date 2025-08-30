@@ -1,379 +1,405 @@
-# LavaLust Framework Documentation
-
-## Database (Query Builder)
-
-## List of Methods
-
-### Raw Query
-
-```php
-$this->db->raw('select * from users where username = ?', array($username));
-# Output: "SELECT * FROM users WHERE username = ?"
-```
-
-### Insert
-
-```php
-$bind = array(
-	'username' => $username,
-	'password' => $this->passwordhash($password),
-	'email' => $email,
-	'usertype' => $usertype,
-	);
-
-$this->db->table('user')->insert($bind);
-# Output: "INSERT INTO user username, password, email, usertype VALUES ($username, $password, $email, $usertype)"
-```
-
-### update
-
-```php
-$data = [
-	'username' => 'ronmarasigan',
-	'password' => 'pass',
-	'activation' => 1,
-	'status' => 1
-];
-
-$this->db->table('users')->where('id', 10)->update($data);
-# Output: "UPDATE users SET username='ronmarasigan', password='pass', activation='1', status='1' WHERE id='10'"
-```
-
-### delete
-
-```php
-$this->db->table('table')->where("id", 17)->delete();
-# Output: "DELETE FROM table WHERE id = '17'"
-
-# OR
-
-$this->db->table('table')->delete();
-# Output: "TRUNCATE TABLE delete"
-```
-
-### transaction
-
-```php
-$this->db->transaction();
-
-$data = [
-	'title' => 'new title',
-	'status' => 2
-];
-$this->db->table('table')->where('id', 10)->update($data);
-
-$this->db->commit();
-# OR
-$this->db->rollBack();
-```
-
-### Select
-
-```php
-# Usage 1: string parameter
-$this->db->table('table')->select('column1, column2')->get_all();
-# Output: "SELECT column1, column2 FROM table"
-
-$this->db->table('table')->select('column1 AS c1, column2 AS c2')->get_all();
-# Output: "SELECT column1 AS c1, column2 AS c2 FROM table"
-```
-
-### select functions (min, max, sum, avg, count)
-
-You can use this method in 5 ways. These;
-
-- select_min
-- select_max
-- select_sum
-- select_avg
-- select_count
-
-Examples:
-
-```php
-# Usage 1:
-$this->db->table('table')->select_max('price')->get();
-# Output: "SELECT MAX(price) FROM table"
-
-# Usage 2:
-$this->db->table('table')->select_count('id', 'total_row')->get();
-# Output: "SELECT COUNT(id) AS total_row FROM table"
-```
-
-### table
-
-```php
-### Usage 1: string parameter
-$this->db->table('table');
-# Output: "SELECT * FROM table"
-
-$this->db->table('table1, table2');
-# Output: "SELECT * FROM table1, table2"
-
-$this->db->table('table1 AS t1, table2 AS t2');
-# Output: "SELECT * FROM table1 AS t1, table2 AS t2"
-```
-
-### get AND get_all
-
-```php
-# get(): return 1 record. It has one optional parameter, yo u can set the fetchmode. example: PDO::FETCH_OBJ by
-# default PDO::FETCH_ASSOC
-# get_all(): return multiple records.
-
-$this->db->table('table')->get_all();
-# Output: "SELECT * FROM table"
-
-$this->db->table('users')->select('username')->where('status', 1)->get_all();
-# Output: "SELECT username FROM users WHERE status='1'"
-
-$this->db->table('pages')->select('title')->where('id', 17)->get();
-# Output: "SELECT title FROM pages WHERE id='17' LIMIT 1"
-```
-
-### join
-
-```php
-$this->db->table('test as t')->join('foo as f', 't.id=f.t_id')->where('t.status', 1)->get_all();
-# Output: "SELECT * FROM test as t JOIN foo as f ON t.id=f.t_id WHERE t.status='1'"
-```
-
-You can use this method in 7 ways. These;
-
-- join
-- left_join
-- right_join
-- inner_join
-- full_outer_join
-- left_outer_join
-- right_outer_join
-
-Examples:
-
-```php
-$this->db->table('test as t')->left_join('foo as f', 't.id=f.t_id')->get_all();
-# Output: "SELECT * FROM test as t LEFT JOIN foo as f ON t.id=f.t_id"
-```
-
-```php
-$this->db->table('test as t')->full_outer_join('foo as f', 't.id=f.t_id')->get_all();
-# Output: "SELECT * FROM test as t FULL OUTER JOIN foo as f ON t.id=f.t_id"
-```
-
-### where
-
-```php
-$where = [
-	'name' => 'Ron',
-	'age' => 23,
-	'status' => 1
-];
-$this->db->table('users')->where($where)->get();
-# Output: "SELECT * FROM users WHERE name='Ron' AND age='23' AND status='1' LIMIT 1"
-
-# OR
-
-$this->db->table('users')->where('active', 1)->get_all();
-# Output: "SELECT * FROM users WHERE active='1'"
-
-# OR
-
-$this->db->table('users')->where('age', '>=', 18)->get_all();
-# Output: "SELECT * FROM users WHERE age>='18'"
-
-# OR
-
-$this->db->table('users')->where('age = ? OR age = ?', [18, 20])->get_all();
-# Output: "SELECT * FROM users WHERE age='18' OR age='20'"
-```
-
-You can use this method in 4 ways. These;
-
-- where
-- or_where
-- not_where
-- or_not_where
-- where_null
-- where_not_null
-
-Example:
-
-```php
-$this->db->table('users')->where('active', 1)->not_where('auth', 1)->get_all();
-# Output: "SELECT * FROM users WHERE active = '1' AND NOT auth = '1'"
-
-# OR
-
-$this->db->table('users')->where('age', 20)->or_where('age', '>', 25)->get_all();
-# Output: "SELECT * FROM users WHERE age = '20' OR age > '25'"
-
-$this->db->table('users')->where_not_null('email')->get_all();
-# Output: "SELECT * FROM users WHERE email IS NOT NULL"
-```
-
-### grouped
-
-```php
-$this->db->table('users')
-	->grouped(function($q) {
-		$q->where('country', 'USA')->or_where('country', 'Philippines');
-	})
-	->where('status', 1)
-	->get_all();
-# Ouput: "SELECT * FROM users WHERE (country='USA' OR country='Philippines') AND status ='1'"
-```
-
-### in
-
-```php
-$this->db->table('users')->where('active', 1)->in('id', [1, 2, 3])->getAll();
-# Output: "SELECT * FROM users WHERE active = '1' AND id IN ('1', '2', '3')"
-```
-
-You can use this method in 4 ways. These;
-
-- in
-- or_in
-- not_in
-- or_not_in
-
-Example:
-
-```php
-$this->db->table('users')->where('active', 1)->not_in('id', [1, 2, 3])->get_all();
-# Output: "SELECT * FROM users WHERE active = '1' AND id NOT IN ('1', '2', '3')"
-
-# OR
-
-$this->db->table('users')->where('users', 1)->or_in('id', [1, 2, 3])->get_all();
-# Output: "SELECT * FROM table WHERE active = '1' OR id IN ('1', '2', '3')"
-```
-
-### between
-
-```php
-$this->db->table('users')->where('active', 1)->between('age', 18, 25)->get_all();
-# Output: "SELECT * FROM users WHERE active = '1' AND age BETWEEN '18' AND '25'"
-```
-
-You can use this method in 4 ways. These;
-
-- between
-- or_between
-- not_between
-- or_not_between
-
-Example:
-
-```php
-$this->db->table('users')->where('active', 1)->not_between('age', 18, 25)->get_all();
-# Output: "SELECT * FROM users WHERE active = '1' AND age NOT BETWEEN '18' AND '25'"
-
-# OR
-
-$this->db->table('users')->where('active', 1)->or_between('age', 18, 25)->get_all();
-# Output: "SELECT * FROM users WHERE active = '1' OR age BETWEEN '18' AND '25'"
-```
-
-### like
-
-```php
-$this->db->table('books')->like('title', "%php%")->get_all();
-# Output: "SELECT * FROM books WHERE title LIKE '%php%'"
-```
-
-You can use this method in 4 ways. These;
-
-- like
-- or_like
-- not_like
-- or_not_like
-
-Example:
-
-```php
-$this->db->table('books')->where('active', 1)->not_like('tags', '%dot-net%')->get_all();
-# Output: "SELECT * FROM books WHERE active = '1' AND tags NOT LIKE '%dot-net%'"
-
-# OR
-
-$this->db->table('books')->like('bio', '%php%')->or_like('bio', '%java%')->get_all();
-# Output: "SELECT * FROM books WHERE bio LIKE '%php%' OR bio LIKE '%java%'"
-```
-
-### group_by
-
-```php
-# Usage 1: One parameter
-$this->db->table('books')->where('status', 1)->group_by('cat_id')->get_all();
-# Output: "SELECT * FROM books WHERE status = '1' GROUP BY cat_id"
-```
-
-```php
-# Usage 1: Array parameter
-$this->db->table('books')->where('status', 1)->group_by(['cat_id', 'user_id'])->get_all();
-# Output: "SELECT * FROM books WHERE status = '1' GROUP BY cat_id, user_id"
-```
-
-### having
-
-```php
-$this->db->table('books')->where('status', 1)->group_by('city')->having('COUNT(person)', 100)->get_all();
-# Output: "SELECT * FROM books WHERE status='1' GROUP BY city HAVING COUNT(person) > '100'"
-
-# OR
-
-$this->db->table('employee')->where('active', 1)->group_by('department_id')->having('AVG(salary)', '<=', 500)->get_all();
-# Output: "SELECT * FROM employee WHERE active='1' GROUP BY department_id HAVING AVG(salary) <= '500'"
-
-# OR
-
-$this->db->table('employee')->where('active', 1)->group_by('department_id')->having('AVG(salary) > ? AND MAX(salary) < ?', [250, 1000])->get_all();
-# Output: "SELECT * FROM employee WHERE active='1' GROUP BY department_id HAVING AVG(salary) > '250' AND MAX(salary) < '1000'"
-```
-
-### order_by
-
-```php
-# Usage 1: One parameter
-$this->db->table('test')->where('status', 1)->order_by('id', 'ASC')->get_all();
-# Output: "SELECT * FROM test WHERE status='1' ORDER BY id ASC"
-```
-
-### limit - offset
-
-```php
-# Usage 1: One parameter
-$this->db->table('table')->limit(10)->get_all();
-# Output: "SELECT * FROM table LIMIT 10"
-
-# Usage 2: with offset method
-$this->db->table('test')->limit(10)->offset(10)->get_all();
-# Output: "SELECT * FROM test limit 10 offset 10";
-```
-
-[Youtube Channel](https://youtube.com/ronmarasigan)
-
-### License
-
-    MIT License
-
-    Copyright (c) 2020 Ronald M. Marasigan
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern IT Portfolio</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config (extend as needed)
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px -10px rgba(2, 6, 23, 0.25)'
+          }
+        }
+      },
+      darkMode: 'class'
+    }
+  </script>
+  <style>
+    /* Nice gradient background */
+    .bg-grid {
+      background-image: radial-gradient(rgba(99,102,241,.15) 1px, transparent 1px);
+      background-size: 20px 20px;
+      background-position: -10px -10px;
+    }
+    .glass {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.5));
+    }
+    .dark .glass { background: linear-gradient(180deg, rgba(2,6,23,.6), rgba(2,6,23,.4)); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+  <!-- Top gradient blob -->
+  <div class="pointer-events-none fixed inset-0 -z-10">
+    <div class="absolute -top-24 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-gradient-to-tr from-primary-500/30 via-indigo-400/30 to-cyan-400/30 blur-3xl"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-white/20 bg-white/70 backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <a href="#home" class="group flex items-center gap-2 font-semibold tracking-tight">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-primary-600 text-white shadow-soft">IT</span>
+        <span class="text-slate-800 group-hover:text-primary-700 dark:text-white dark:group-hover:text-primary-300">Your Name</span>
+      </a>
+      <nav class="hidden items-center gap-6 md:flex">
+        <a href="#home" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Home</a>
+        <a href="#skills" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Skills</a>
+        <a href="#projects" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Projects</a>
+        <a href="#experience" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Experience</a>
+        <a href="#contact" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Contact</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button id="themeToggle" class="inline-flex items-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+          <svg id="sun" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2m-3.5-6.5 1.5 1.5M5 18.5 3.5 17M3.5 7.5 5 9m13 9 1.5 1.5"/></svg>
+          <svg id="moon" xmlns="http://www.w3.org/2000/svg" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="md:hidden" id="menuBtn" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden border-t border-white/30 bg-white/80 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/80 md:hidden">
+      <div class="flex flex-col gap-3">
+        <a href="#home" class="nav-link text-sm">Home</a>
+        <a href="#skills" class="nav-link text-sm">Skills</a>
+        <a href="#projects" class="nav-link text-sm">Projects</a>
+        <a href="#experience" class="nav-link text-sm">Experience</a>
+        <a href="#contact" class="nav-link text-sm">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="relative isolate overflow-hidden">
+    <div class="bg-grid">
+      <div class="mx-auto flex max-w-6xl flex-col items-center gap-8 px-4 py-24 md:flex-row md:py-28">
+        <div class="flex-1 space-y-6">
+          <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-xs text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300">
+            <span class="inline-flex h-2 w-2 animate-pulse rounded-full bg-primary-600"></span>
+            Available for freelance & remote
+          </div>
+          <h1 class="text-4xl font-extrabold tracking-tight md:text-6xl">
+            Hi, I'm <span class="text-primary-600 dark:text-primary-400">Your Name</span>
+          </h1>
+          <p class="max-w-xl text-lg text-slate-600 dark:text-slate-300">Full‑stack developer focused on performant web apps, cloud‑native systems, and delightful UX. I turn complex ideas into reliable, secure, and scalable software.</p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#projects" class="rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:bg-primary-700">View Projects</a>
+            <a href="#contact" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-soft hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">Contact Me</a>
+            <a href="#" download class="rounded-xl border border-transparent bg-gradient-to-r from-primary-600 to-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:from-primary-700 hover:to-cyan-700">Download CV</a>
+          </div>
+          <div class="flex items-center gap-4 pt-2 text-slate-500">
+            <a class="hover:text-primary-600" href="#" aria-label="GitHub">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.19-3.37-1.19-.46-1.16-1.12-1.47-1.12-1.47-.92-.63.07-.62.07-.62 1.02.07 1.56 1.05 1.56 1.05 .9 1.55 2.36 1.1 2.94.84 .09-.66.35-1.1.63-1.35 -2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68 -.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.8c.85 0 1.7.12 2.5.35 1.9-1.29 2.74-1.02 2.74-1.02 .55 1.38.21 2.4.1 2.65 .64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93 .36.31.68.93.68 1.88v2.79c0 .26.18.57.69.47A10 10 0 0 0 12 2z"/></svg>
+            </a>
+            <a class="hover:text-primary-600" href="#" aria-label="LinkedIn">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 8.98h5V24H0zM8.34 8.98h4.79v2.05h.07c.67-1.26 2.3-2.6 4.74-2.6 5.07 0 6 3.34 6 7.68V24h-5v-6.76c0-1.61-.03-3.68-2.24-3.68-2.25 0-2.59 1.75-2.59 3.56V24h-5z"/></svg>
+            </a>
+            <a class="hover:text-primary-600" href="#" aria-label="X">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2H21l-6.611 7.56L22 22h-6.828l-4.77-6.232L4.8 22H2l7.106-8.13L2 2h6.914l4.3 5.77L18.244 2zm-1.197 18h1.7L7.053 4h-1.8l11.794 16z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="flex-1">
+          <div class="glass relative mx-auto max-w-md rounded-3xl border border-white/30 p-4 shadow-soft ring-1 ring-black/5 dark:border-slate-700 dark:ring-white/5">
+            <img class="h-auto w-full rounded-2xl object-cover" src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop" alt="Developer workspace" />
+            <div class="mt-4 grid grid-cols-3 gap-3 text-center text-xs">
+              <div class="rounded-xl bg-white/70 p-2 dark:bg-slate-800/60">
+                <div class="font-semibold">5+</div>
+                <div class="text-slate-500">Years exp.</div>
+              </div>
+              <div class="rounded-xl bg-white/70 p-2 dark:bg-slate-800/60">
+                <div class="font-semibold">20+</div>
+                <div class="text-slate-500">Projects</div>
+              </div>
+              <div class="rounded-xl bg-white/70 p-2 dark:bg-slate-800/60">
+                <div class="font-semibold">3</div>
+                <div class="text-slate-500">Certs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="mx-auto max-w-6xl px-4 py-16">
+    <div class="mb-8 flex items-end justify-between">
+      <h2 class="text-2xl font-bold tracking-tight md:text-3xl">Core Skills</h2>
+      <span class="text-xs text-slate-500">Drag to reorder (static demo)</span>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- card -->
+      <div class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+        <div class="mb-3 flex items-center justify-between">
+          <div class="text-sm font-semibold">Frontend Engineering</div>
+          <span class="rounded-full bg-primary-600/10 px-2 py-0.5 text-[10px] font-medium text-primary-700 dark:text-primary-300">React • Tailwind</span>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Design systems, component libraries, accessibility, and high‑performance UI.</p>
+      </div>
+      <div class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+        <div class="mb-3 flex items-center justify-between">
+          <div class="text-sm font-semibold">Backend & APIs</div>
+          <span class="rounded-full bg-primary-600/10 px-2 py-0.5 text-[10px] font-medium text-primary-700 dark:text-primary-300">Node • PHP • Go</span>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-300">REST/GraphQL, authentication, clean architecture, testing, and observability.</p>
+      </div>
+      <div class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+        <div class="mb-3 flex items-center justify-between">
+          <div class="text-sm font-semibold">Cloud & DevOps</div>
+          <span class="rounded-full bg-primary-600/10 px-2 py-0.5 text-[10px] font-medium text-primary-700 dark:text-primary-300">AWS • Docker • CI/CD</span>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Infrastructure as code, containers, pipelines, and cost‑efficient scaling.</p>
+      </div>
+      <div class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+        <div class="mb-3 flex items-center justify-between">
+          <div class="text-sm font-semibold">Database Design</div>
+          <span class="rounded-full bg-primary-600/10 px-2 py-0.5 text-[10px] font-medium text-primary-700 dark:text-primary-300">Postgres • MySQL • Redis</span>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Schema design, performance tuning, sharding, caching, and migrations.</p>
+      </div>
+      <div class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+        <div class="mb-3 flex items-center justify-between">
+          <div class="text-sm font-semibold">Security</div>
+          <span class="rounded-full bg-primary-600/10 px-2 py-0.5 text-[10px] font-medium text-primary-700 dark:text-primary-300">OWASP • Auth • JWT</span>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Threat modeling, best practices, secure coding, and vulnerability testing.</p>
+      </div>
+      <div class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+        <div class="mb-3 flex items-center justify-between">
+          <div class="text-sm font-semibold">AI & Automation</div>
+          <span class="rounded-full bg-primary-600/10 px-2 py-0.5 text-[10px] font-medium text-primary-700 dark:text-primary-300">Python • RAG • LLMs</span>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Data pipelines, embeddings, and practical ML for real business outcomes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="bg-slate-900/2 relative">
+    <div class="mx-auto max-w-6xl px-4 py-16">
+      <div class="mb-8 flex items-end justify-between">
+        <h2 class="text-2xl font-bold tracking-tight md:text-3xl">Selected Projects</h2>
+        <a href="#" class="text-sm text-primary-600 hover:underline dark:text-primary-300">View all →</a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Project Card -->
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+          <div class="relative">
+            <img class="h-40 w-full object-cover transition duration-300 group-hover:scale-[1.03]" src="https://images.unsplash.com/photo-1526481280698-8fcc13fd87f1?q=80&w=1600&auto=format&fit=crop" alt="Project screenshot" />
+            <span class="absolute left-3 top-3 rounded-full bg-black/70 px-2 py-0.5 text-[10px] text-white">Next.js • Postgres</span>
+          </div>
+          <div class="space-y-2 p-5">
+            <h3 class="font-semibold">Realtime Analytics Dashboard</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Multi‑tenant metrics, role‑based access, and blazing‑fast charts over billions of rows.</p>
+            <div class="flex items-center gap-3 pt-2 text-xs text-slate-500">
+              <a href="#" class="inline-flex items-center gap-1 hover:text-primary-600">Demo
+                <svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='M9 5l7 7-7 7'/></svg>
+              </a>
+              <a href="#" class="inline-flex items-center gap-1 hover:text-primary-600">Code
+                <svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='M9 5l7 7-7 7'/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+        <!-- Repeat cards with different content -->
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+          <div class="relative">
+            <img class="h-40 w-full object-cover transition duration-300 group-hover:scale-[1.03]" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop" alt="Project screenshot" />
+            <span class="absolute left-3 top-3 rounded-full bg-black/70 px-2 py-0.5 text-[10px] text-white">Laravel • MySQL</span>
+          </div>
+          <div class="space-y-2 p-5">
+            <h3 class="font-semibold">E‑commerce API + Admin</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Headless checkout, inventory sync, and plug‑and‑play payment providers.</p>
+            <div class="flex items-center gap-3 pt-2 text-xs text-slate-500">
+              <a href="#" class="inline-flex items-center gap-1 hover:text-primary-600">Demo
+                <svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='M9 5l7 7-7 7'/></svg>
+              </a>
+              <a href="#" class="inline-flex items-center gap-1 hover:text-primary-600">Code
+                <svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='M9 5l7 7-7 7'/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-800">
+          <div class="relative">
+            <img class="h-40 w-full object-cover transition duration-300 group-hover:scale-[1.03]" src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1600&auto=format&fit=crop" alt="Project screenshot" />
+            <span class="absolute left-3 top-3 rounded-full bg-black/70 px-2 py-0.5 text-[10px] text-white">Docker • k8s</span>
+          </div>
+          <div class="space-y-2 p-5">
+            <h3 class="font-semibold">Cloud‑Native Microservices</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Event‑driven architecture, zero‑downtime deploys, and auto‑scaling workers.</p>
+            <div class="flex items-center gap-3 pt-2 text-xs text-slate-500">
+              <a href="#" class="inline-flex items-center gap-1 hover:text-primary-600">Demo
+                <svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='M9 5l7 7-7 7'/></svg>
+              </a>
+              <a href="#" class="inline-flex items-center gap-1 hover:text-primary-600">Code
+                <svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='M9 5l7 7-7 7'/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience / Timeline -->
+  <section id="experience" class="mx-auto max-w-6xl px-4 py-16">
+    <h2 class="mb-10 text-2xl font-bold tracking-tight md:text-3xl">Experience</h2>
+    <ol class="relative border-s-l border-slate-200 dark:border-slate-700">
+      <li class="mb-10 ms-6">
+        <span class="absolute -start-3 mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-white ring-8 ring-white dark:ring-slate-900">1</span>
+        <h3 class="mb-1 font-semibold">Senior Software Engineer • Company A</h3>
+        <time class="mb-2 block text-xs text-slate-500">2023 — Present</time>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Leading a platform team to modernize legacy services, boost reliability, and cut infra cost by 35%.</p>
+      </li>
+      <li class="mb-10 ms-6">
+        <span class="absolute -start-3 mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-white ring-8 ring-white dark:ring-slate-900">2</span>
+        <h3 class="mb-1 font-semibold">Full‑stack Developer • Startup B</h3>
+        <time class="mb-2 block text-xs text-slate-500">2021 — 2023</time>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Built and shipped a multi‑region SaaS with SSO, billing, and analytics from the ground up.</p>
+      </li>
+      <li class="ms-6">
+        <span class="absolute -start-3 mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-white ring-8 ring-white dark:ring-slate-900">3</span>
+        <h3 class="mb-1 font-semibold">IT Intern • Org C</h3>
+        <time class="mb-2 block text-xs text-slate-500">2020 — 2021</time>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Automated deployment scripts and monitoring; reduced incident resolution time by 40%.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="relative isolate">
+    <div class="mx-auto max-w-6xl px-4">
+      <div class="overflow-hidden rounded-3xl bg-gradient-to-r from-primary-700 to-cyan-700 p-8 text-white shadow-soft md:p-12">
+        <div class="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div>
+            <h3 class="text-2xl font-bold">Let’s build something great together.</h3>
+            <p class="mt-1 text-white/80">Available for freelance, contract, or full‑time roles.</p>
+          </div>
+          <a href="#contact" class="rounded-xl bg-white/10 px-5 py-3 text-sm font-semibold backdrop-blur hover:bg-white/20">Start a project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="mx-auto max-w-6xl px-4 py-16">
+    <div class="grid gap-10 md:grid-cols-5">
+      <div class="md:col-span-2">
+        <h2 class="text-2xl font-bold tracking-tight md:text-3xl">Contact</h2>
+        <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">Have a question, proposal, or project idea? Send a message and I’ll get back within 24 hours.</p>
+        <div class="mt-6 space-y-3 text-sm text-slate-600 dark:text-slate-300">
+          <p class="flex items-center gap-2"><svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' viewBox='0 0 24 24' fill='currentColor'><path d='M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm-1.4 4.25-6.2 3.88a2 2 0 0 1-2.1 0L4.1 8.25a1 1 0 0 1 1.05-1.7l6.2 3.88a1 1 0 0 0 1.1 0l6.2-3.88a1 1 0 1 1 1.05 1.7Z'/></svg> you@domain.com</p>
+          <p class="flex items-center gap-2"><svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' viewBox='0 0 24 24' fill='currentColor'><path d='M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.85 21 3 13.15 3 3a1 1 0 0 1 1-1h2.5a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.24 1.02l-2.21 2.2Z'/></svg> +63 900 000 0000</p>
+          <p class="flex items-center gap-2"><svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' viewBox='0 0 24 24' fill='currentColor'><path d='M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7Zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5Z'/></svg> Manila, PH</p>
+        </div>
+      </div>
+      <form class="md:col-span-3 space-y-4">
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">Full Name</label>
+            <input class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-slate-700 dark:bg-slate-800" placeholder="Juan Dela Cruz" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">Email</label>
+            <input type="email" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-slate-700 dark:bg-slate-800" placeholder="you@domain.com" />
+          </div>
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">Subject</label>
+          <input class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-slate-700 dark:bg-slate-800" placeholder="Let's work together" />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">Message</label>
+          <textarea rows="5" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-slate-700 dark:bg-slate-800" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button type="button" class="rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-soft hover:bg-primary-700">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/20 bg-white/70 py-8 backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 md:flex-row">
+      <p class="text-xs text-slate-500">© <span id="year"></span> Your Name. All rights reserved.</p>
+      <div class="flex items-center gap-4 text-slate-500">
+        <a href="#home" class="hover:text-primary-600">Back to top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    // Theme toggle with localStorage
+    const themeToggle = document.getElementById('themeToggle');
+    const sun = document.getElementById('sun');
+    const moon = document.getElementById('moon');
+    const root = document.documentElement;
+
+    function setTheme(dark) {
+      if (dark) {
+        root.classList.add('dark');
+        sun.classList.add('hidden');
+        moon.classList.remove('hidden');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        root.classList.remove('dark');
+        sun.classList.remove('hidden');
+        moon.classList.add('hidden');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    // Initialize theme
+    const saved = localStorage.getItem('theme');
+    setTheme(saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+    themeToggle.addEventListener('click', () => setTheme(!root.classList.contains('dark')));
+
+    // Active nav link highlight on scroll
+    const sections = ['home','skills','projects','experience','contact'];
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+      let current = 'home';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 120) current = id;
+      });
+      navLinks.forEach(a => {
+        const isActive = a.getAttribute('href') === '#' + current;
+        a.classList.toggle('text-primary-600', isActive);
+        a.classList.toggle('font-semibold', isActive);
+      });
+    });
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
